@@ -32,21 +32,26 @@ def install_chrome():
 install_chrome()
 
 def create_driver():
+    import os
+
+def create_driver():
     chrome_options = Options()
-    chrome_options.add_argument("--headless")  # Run in headless mode
+    chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    
-    # Check if Chrome exists
-    chrome_path = shutil.which("google-chrome") or "/usr/bin/google-chrome"
-    if chrome_path:
-        chrome_options.binary_location = chrome_path
+
+    # Optional: Detect if running locally or in production (e.g., Render)
+    if os.getenv("RENDER") == "true":
+        chrome_path = shutil.which("google-chrome") or "/usr/bin/google-chrome"
+        if chrome_path:
+            chrome_options.binary_location = chrome_path
+        return webdriver.Chrome(options=chrome_options)
     else:
-        raise Exception("Chrome binary not found!")
-
-    driver = webdriver.Chrome(options=chrome_options)
-    return driver
-
+        # Use ChromeDriverManager for local development
+        from selenium.webdriver.chrome.service import Service
+        from webdriver_manager.chrome import ChromeDriverManager
+        service = Service(ChromeDriverManager().install())
+        return webdriver.Chrome(service=service, options=chrome_options)
 
 def scrape_data(mnv, template):
     if not mnv.isnumeric():
@@ -62,8 +67,7 @@ def scrape_data(mnv, template):
 
     browser = None
     try:
-        service = Service(ChromeDriverManager().install())
-        browser = webdriver.Chrome(service=service, options=options)
+        browser = create_driver()
 
         browser.get("http://scfp.vn/Productscan.aspx")
         browser.find_element(By.ID, "ctl00_ContentPlaceHolder1_txtMANV").send_keys(mnv)
