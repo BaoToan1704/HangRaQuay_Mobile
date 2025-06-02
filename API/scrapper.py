@@ -15,6 +15,37 @@ import uuid
 from openpyxl import load_workbook
 from tempfile import gettempdir
 import sys
+import subprocess
+from selenium.webdriver.chrome.options import Options
+import shutil
+
+def install_chrome():
+    try:
+        subprocess.run([
+            "wget", "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+        ])
+        subprocess.run(["apt-get", "update"])
+        subprocess.run(["apt-get", "install", "-y", "./google-chrome-stable_current_amd64.deb"])
+    except Exception as e:
+        print(f"Chrome install failed: {e}")
+
+install_chrome()
+
+def create_driver():
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # Run in headless mode
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    
+    # Check if Chrome exists
+    chrome_path = shutil.which("google-chrome") or "/usr/bin/google-chrome"
+    if chrome_path:
+        chrome_options.binary_location = chrome_path
+    else:
+        raise Exception("Chrome binary not found!")
+
+    driver = webdriver.Chrome(options=chrome_options)
+    return driver
 
 
 def scrape_data(mnv, template):
