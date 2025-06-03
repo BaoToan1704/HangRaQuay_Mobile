@@ -24,7 +24,7 @@ def scrape_data(mnv, template):
         raise ValueError("Mã nhân viên không hợp lệ.")
 
     options = webdriver.ChromeOptions()
-    options.binary_location = "/usr/bin/google-chrome" 
+    # options.binary_location = "/usr/bin/google-chrome" 
     options.add_argument('--headless=new')
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
@@ -102,7 +102,7 @@ def generate_word(data):
     today_str = datetime.today().strftime("InHangRaQuay_%d%m%Y.docx")
     output_path = os.path.join(gettempdir(), today_str)
 
-    template_path = resource_path(os.path.join("template", "phieu_xuat.docx"))
+    template_path = resource_path("template/phieu_xuat.docx")
     document = Document(template_path)
     table = document.tables[0]
 
@@ -128,7 +128,7 @@ def generate_word(data):
 
 
 def generate_excel(data):
-    template_path = resource_path(os.path.join("template", "KPH.xlsx"))
+    template_path = resource_path("template/KPH.xlsx")
     workbook = load_workbook(template_path)
     sheet = workbook.active
 
@@ -158,6 +158,5 @@ def generate_excel(data):
     return output_path
 
 def resource_path(filename):
-    if hasattr(sys, '_MEIPASS'):
-        return os.path.join(sys._MEIPASS, filename)
-    return os.path.join(os.path.abspath("."), filename)
+    base_path = os.path.dirname(os.path.abspath(__file__)) 
+    return os.path.join(base_path, filename)
