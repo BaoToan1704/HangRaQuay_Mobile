@@ -19,40 +19,6 @@ import subprocess
 from selenium.webdriver.chrome.options import Options
 import shutil
 
-def install_chrome():
-    try:
-        subprocess.run([
-            "wget", "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
-        ])
-        subprocess.run(["apt-get", "update"])
-        subprocess.run(["apt-get", "install", "-y", "./google-chrome-stable_current_amd64.deb"])
-    except Exception as e:
-        print(f"Chrome install failed: {e}")
-
-install_chrome()
-
-def create_driver():
-    import os
-
-def create_driver():
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-
-    # Optional: Detect if running locally or in production (e.g., Render)
-    if os.getenv("RENDER") == "true":
-        chrome_path = shutil.which("google-chrome") or "/usr/bin/google-chrome"
-        if chrome_path:
-            chrome_options.binary_location = chrome_path
-        return webdriver.Chrome(options=chrome_options)
-    else:
-        # Use ChromeDriverManager for local development
-        from selenium.webdriver.chrome.service import Service
-        from webdriver_manager.chrome import ChromeDriverManager
-        service = Service(ChromeDriverManager().install())
-        return webdriver.Chrome(service=service, options=chrome_options)
-
 def scrape_data(mnv, template):
     if not mnv.isnumeric():
         raise ValueError("Mã nhân viên không hợp lệ.")
@@ -67,7 +33,8 @@ def scrape_data(mnv, template):
 
     browser = None
     try:
-        browser = create_driver()
+        service = Service(ChromeDriverManager().install())
+        browser = webdriver.Chrome(service=service, options=options)
 
         browser.get("http://scfp.vn/Productscan.aspx")
         browser.find_element(By.ID, "ctl00_ContentPlaceHolder1_txtMANV").send_keys(mnv)
