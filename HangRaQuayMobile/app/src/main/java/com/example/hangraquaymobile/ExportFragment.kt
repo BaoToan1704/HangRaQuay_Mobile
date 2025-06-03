@@ -82,7 +82,7 @@ class ExportFragment : Fragment() {
             try {
                 val client = okhttp3.OkHttpClient()
                 val request = okhttp3.Request.Builder()
-                    .url("http://127.0.0.1:10000/generate_export?mnv=$maNV&template=phieu_xuat") // 🔁 Update with your API URL
+                    .url("https://fa57-113-161-61-210.ngrok-free.app/get_data?mnv=$maNV&template=phieu_xuat") // 🔁 Update with your API URL
                     .build()
 
                 val response = client.newCall(request).execute()
