@@ -1,14 +1,12 @@
-# Use official Python image
 FROM python:3.10-slim
 
-# Install required Linux packages
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     wget \
+    curl \
     unzip \
     gnupg \
-    ca-certificates \
     fonts-liberation \
-    libappindicator3-1 \
     libasound2 \
     libatk-bridge2.0-0 \
     libatk1.0-0 \
@@ -25,34 +23,36 @@ RUN apt-get update && apt-get install -y \
     libu2f-udev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Google Chrome
+# Install Chrome
 RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
     apt-get update && \
     apt-get install -y ./google-chrome-stable_current_amd64.deb && \
     rm ./google-chrome-stable_current_amd64.deb
 
 # Install matching ChromeDriver
-RUN CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+') && \
-    CHROMEDRIVER_VERSION=$(wget -qO- "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}") && \
+RUN set -ex && \
+    CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1) && \
+    CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}") && \
     wget -q -O /tmp/chromedriver.zip "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" && \
     unzip /tmp/chromedriver.zip -d /usr/local/bin/ && \
-    chmod +x /usr/local/bin/chromedriver
+    chmod +x /usr/local/bin/chromedriver && \
+    rm /tmp/chromedriver.zip
 
-# Environment variables for Selenium
-ENV PATH="/usr/local/bin:$PATH"
-ENV CHROME_BIN="/usr/bin/google-chrome"
+# Set environment variables for Selenium
+ENV CHROME_BIN=/usr/bin/google-chrome
+ENV CHROMEDRIVER_PATH=/usr/local/bin/chromedriver
 
 # Set working directory
 WORKDIR /app
 
-# Copy all project files into the container
+# Copy code
 COPY . .
 
 # Install Python dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Expose port (match your Flask app)
-EXPOSE 5000
+# Expose your Flask port
+EXPOSE 10000
 
-# Run your Flask app
-CMD ["python", "app.py"]
+# Run the Flask app
+CMD ["python", "API/app.py"]
