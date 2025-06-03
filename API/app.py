@@ -6,6 +6,10 @@ os.environ["PATH"] += os.pathsep + "/usr/bin"
 
 app = Flask(__name__)
 
+@app.route('/')
+def index():
+    return "Welcome to the Export API! Use /get_data to fetch data or /generate_export to create exports."
+
 @app.route('/get_data', methods=['GET'])
 def get_data():
     mnv = request.args.get('mnv')

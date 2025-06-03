@@ -159,4 +159,4 @@ def generate_excel(data):
 
 def resource_path(filename):
     base_path = os.path.dirname(os.path.abspath(__file__)) 
-    return os.path.join(base_path, filename)
+    return os.path.join(base_path, "template", os.path.basename(filename))
