@@ -32,13 +32,20 @@ RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd6
     apt-get install -y ./google-chrome-stable_current_amd64.deb && \
     rm google-chrome-stable_current_amd64.deb
 
-# Install ChromeDriver (latest compatible)
-RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1) && \
+# Manually set a Chrome major version fallback (e.g., 124 if unsure)
+ENV CHROME_MAJOR_VERSION=124
+
+# Try to get Chrome major version dynamically (optional fallback to ENV)
+RUN google-chrome --version || echo "Google Chrome not found"
+RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1 || echo "$CHROME_MAJOR_VERSION") && \
+    echo "Using Chrome version $CHROME_VERSION" && \
     CHROMEDRIVER_VERSION=$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION} || curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE) && \
+    echo "Resolved ChromeDriver version: $CHROMEDRIVER_VERSION" && \
     wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip && \
     unzip /tmp/chromedriver.zip -d /usr/local/bin/ && \
     chmod +x /usr/local/bin/chromedriver && \
     rm /tmp/chromedriver.zip
+
 
 # Set environment variables
 ENV CHROME_BIN=/usr/bin/google-chrome \
