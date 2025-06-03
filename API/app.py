@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify, send_file
 from scrapper import scrape_data, generate_word, generate_excel
 import os
 
+os.environ["PATH"] += os.pathsep + "/usr/bin"
+
 app = Flask(__name__)
 
 @app.route('/get_data', methods=['GET'])

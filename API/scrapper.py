@@ -24,6 +24,7 @@ def scrape_data(mnv, template):
         raise ValueError("Mã nhân viên không hợp lệ.")
 
     options = webdriver.ChromeOptions()
+    options.binary_location = "/usr/bin/google-chrome" 
     options.add_argument('--headless=new')
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
