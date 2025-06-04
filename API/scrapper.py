@@ -18,13 +18,14 @@ import sys
 import subprocess
 from selenium.webdriver.chrome.options import Options
 import shutil
+import platform
 
 def scrape_data(mnv, template):
     if not mnv.isnumeric():
         raise ValueError("Mã nhân viên không hợp lệ.")
 
     options = webdriver.ChromeOptions()
-    options.binary_location = "/usr/bin/google-chrome" 
+    # options.binary_location = "/usr/bin/google-chrome" 
     options.add_argument('--headless=new')
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
@@ -35,7 +36,12 @@ def scrape_data(mnv, template):
     browser = None
     try:
         # service = Service(ChromeDriverManager().install())
-        service = Service("/usr/local/bin/chromedriver") 
+        if platform.system() == "Windows":
+            service = Service("C:/Tools/chromedriver-win64/chromedriver.exe")
+        else:
+            options.binary_location = "/usr/bin/chromium"
+            service = Service("/usr/bin/chromedriver")
+            
         browser = webdriver.Chrome(service=service, options=options)
 
         browser.get("http://scfp.vn/Productscan.aspx")

@@ -26,4 +26,5 @@ COPY API /app/API
 EXPOSE 8080
 
 # Run the Flask app inside API
-CMD ["python", "API/app.py"]
+RUN pip install gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "API.app:app"]
