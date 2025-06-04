@@ -4,7 +4,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
+# from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 from docx import Document
 from docx.shared import Pt
@@ -24,7 +24,7 @@ def scrape_data(mnv, template):
         raise ValueError("Mã nhân viên không hợp lệ.")
 
     options = webdriver.ChromeOptions()
-    # options.binary_location = "/usr/bin/google-chrome" 
+    options.binary_location = "/usr/bin/google-chrome" 
     options.add_argument('--headless=new')
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
@@ -34,7 +34,8 @@ def scrape_data(mnv, template):
 
     browser = None
     try:
-        service = Service(ChromeDriverManager().install())
+        # service = Service(ChromeDriverManager().install())
+        service = Service("/usr/local/bin/chromedriver") 
         browser = webdriver.Chrome(service=service, options=options)
 
         browser.get("http://scfp.vn/Productscan.aspx")
