@@ -27,4 +27,4 @@ EXPOSE 8080
 
 # Run the Flask app inside API
 RUN pip install gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "API.app:app"]
+CMD ["gunicorn", "--chdir", "API", "--bind", "0.0.0.0:8080", "app:app"]
