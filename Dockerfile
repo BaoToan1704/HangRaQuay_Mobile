@@ -12,19 +12,19 @@ RUN apt-get update && apt-get install -y \
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# Set work directory
+# Set working directory
 WORKDIR /app
 
-# Copy requirement file and install dependencies
+# Copy requirements and install Python dependencies
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install gunicorn
 
-# Copy entire API folder into container
+# Copy your API folder
 COPY API /app/API
 
-# Expose port
+# Expose port 8080
 EXPOSE 8080
 
-# Run the Flask app inside API
-RUN pip install gunicorn
+# Use gunicorn to run the Flask app
 CMD ["gunicorn", "--chdir", "API", "--bind", "0.0.0.0:8080", "app:app"]
