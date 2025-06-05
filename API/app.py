@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, send_file
-from scrapper import scrape_data, generate_word, generate_excel
+from scrapper import scrape_data, generate_word, generate_excel, convert_word_to_png
 import os
 
 os.environ["PATH"] += os.pathsep + "/usr/bin"
@@ -73,7 +73,20 @@ def generate_export_api():
 
         except Exception as e:
             return {"error": str(e)}, 500
+        
+@app.route('/preview', methods=['POST'])
+def preview_export():
+    mnv = request.args.get("mnv")
+    template = request.args.get("template", "phieu_xuat")
 
+    # Generate the Word file
+    output_docx = f"/tmp/phieu_xuat_{mnv}.docx"
+    generate_word(mnv, template, output_docx)  # your existing function
+
+    # Convert to preview image
+    preview_path = convert_word_to_png(output_docx, "/tmp")
+
+    return send_file(preview_path, mimetype="image/png")
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 10000)))

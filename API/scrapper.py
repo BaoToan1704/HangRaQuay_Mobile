@@ -19,6 +19,8 @@ import subprocess
 from selenium.webdriver.chrome.options import Options
 import shutil
 import platform
+from pdf2image import convert_from_path
+
 
 def scrape_data(mnv, template):
     if not mnv.isnumeric():
@@ -163,6 +165,22 @@ def generate_excel(data):
     workbook.save(output_path)
 
     return output_path
+
+def convert_word_to_png(docx_path, output_dir):
+    # Convert DOCX to PDF
+    pdf_path = os.path.join(output_dir, "converted.pdf")
+    subprocess.run([
+        "libreoffice", "--headless", "--convert-to", "pdf",
+        "--outdir", output_dir, docx_path
+    ], check=True)
+
+    # Convert first page of PDF to PNG
+    images = convert_from_path(pdf_path, dpi=200, first_page=1, last_page=1)
+    image_path = os.path.join(output_dir, "preview.png")
+    images[0].save(image_path, "PNG")
+
+    return image_path
+    
 
 def resource_path(filename):
     base_path = os.path.dirname(os.path.abspath(__file__)) 

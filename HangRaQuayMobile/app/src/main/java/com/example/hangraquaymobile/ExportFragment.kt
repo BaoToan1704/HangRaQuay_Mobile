@@ -11,6 +11,8 @@ import com.example.hangraquaymobile.databinding.FragmentExportBinding
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileOutputStream
+import okhttp3.OkHttpClient
+import okhttp3.Request
 
 class ExportFragment : Fragment() {
     private var _binding: FragmentExportBinding? = null
@@ -80,9 +82,13 @@ class ExportFragment : Fragment() {
 
         mainScope.launch(Dispatchers.IO) {
             try {
-                val client = okhttp3.OkHttpClient()
-                val request = okhttp3.Request.Builder()
-                    .url("https://fa57-113-161-61-210.ngrok-free.app/get_data?mnv=$maNV&template=phieu_xuat") // 🔁 Update with your API URL
+                val client = OkHttpClient.Builder()
+                    .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+                    .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+                    .writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+                    .build()
+                val request = Request.Builder()
+                    .url("https://chrome-api-imq9.onrender.com/generate_export?mnv=$maNV&template=phieu_xuat") // 🔁 Update with your API URL
                     .build()
 
                 val response = client.newCall(request).execute()
