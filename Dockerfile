@@ -3,6 +3,7 @@ FROM python:3.10-slim
 
 # Install Chrome and dependencies
 RUN apt-get update && apt-get install -y \
+    libreoffice \
     wget unzip curl gnupg2 fonts-liberation libnss3 libxss1 libappindicator3-1 libasound2 \
     libatk-bridge2.0-0 libgtk-3-0 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 \
     libxdamage1 libxrandr2 libgbm1 xdg-utils chromium chromium-driver && \

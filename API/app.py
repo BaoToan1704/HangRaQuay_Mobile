@@ -74,19 +74,22 @@ def generate_export_api():
         except Exception as e:
             return {"error": str(e)}, 500
         
-@app.route('/preview', methods=['POST'])
+@app.route('/preview', methods=['GET'])
 def preview_export():
     mnv = request.args.get("mnv")
     template = request.args.get("template", "phieu_xuat")
 
-    # Generate the Word file
-    output_docx = f"/tmp/phieu_xuat_{mnv}.docx"
-    generate_word(mnv, template, output_docx)  # your existing function
+    try:
+        df = scrape_data(mnv, template)
+        data = df.to_dict(orient='records')
 
-    # Convert to preview image
-    preview_path = convert_word_to_png(output_docx, "/tmp")
+        output_docx = generate_word(data)
+        preview_path = convert_word_to_png(output_docx, "/tmp")
 
-    return send_file(preview_path, mimetype="image/png")
+        return send_file(preview_path, mimetype="image/png")
+    except Exception as e:
+        return {"error": str(e)}, 500
+
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 10000)))
