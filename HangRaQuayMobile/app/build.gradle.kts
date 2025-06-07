@@ -60,6 +60,8 @@ dependencies {
     implementation ("org.apache.commons:commons-collections4:4.4")
     implementation ("org.apache.xmlbeans:xmlbeans:5.1.1")
     implementation ("androidx.multidex:multidex:2.0.1")
+    implementation ("androidx.core:core-splashscreen:1.0.1")
+
 
 
 }

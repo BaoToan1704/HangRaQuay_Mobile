@@ -8,5 +8,10 @@
 
     <style name="Theme.HangRaQuayMobile" parent="Base.Theme.HangRaQuayMobile" />
 
+    <style name="Theme.HangRaQuayMobile.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#dddddd</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.HangRaQuayMobile</item>
+    </style>
 
 </resources>
