@@ -84,22 +84,40 @@
             android:textSize="14sp" />
 
         <!-- Spinner -->
-        <ImageView
-            android:id="@+id/spinner"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center"
-            android:src="@drawable/spinner"
-            android:visibility="gone"
-            android:layout_marginBottom="16dp" />
+<!--        <ImageView-->
+<!--            android:id="@+id/spinner"-->
+<!--            android:layout_width="48dp"-->
+<!--            android:layout_height="48dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:src="@drawable/spinner"-->
+<!--            android:visibility="gone"-->
+<!--            android:layout_marginBottom="16dp" />-->
 
         <!-- Share Button -->
-        <Button
-            android:id="@+id/btnShare"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Chia sẻ"
-            android:layout_marginBottom="16dp"
-            android:enabled="false" />
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:weightSum="2" >
+
+            <Button
+                android:id="@+id/btnPreview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Mở"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnShare"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Chia sẻ"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

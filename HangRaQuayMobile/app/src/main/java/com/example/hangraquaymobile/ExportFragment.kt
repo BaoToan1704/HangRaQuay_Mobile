@@ -44,6 +44,9 @@ class ExportFragment : Fragment() {
             startExportProcess(maNV)
         }
 
+        binding.btnPreview.isEnabled = false
+        binding.btnShare.isEnabled = false
+
         binding.btnShare.setOnClickListener {
             exportedFile?.let { file ->
                 val uri = FileProvider.getUriForFile(
@@ -58,9 +61,33 @@ class ExportFragment : Fragment() {
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 }
 
-                startActivity(Intent.createChooser(shareIntent, "Chia sẻ phiếu xuất"))
+                startActivity(Intent.createChooser(shareIntent, "Chia sẻ phiếu xuất hàng ra quầy"))
             } ?: run {
                 binding.logOutput.append("⚠️ Không tìm thấy file để chia sẻ.\n")
+            }
+        }
+
+        binding.btnPreview.setOnClickListener {
+            exportedFile?.let { file ->
+                val uri = FileProvider.getUriForFile(
+                    requireContext(),
+                    "${requireContext().packageName}.fileprovider",
+                    file
+                )
+
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    setDataAndType(uri, "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+
+                // Try to open with a viewer
+                try {
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    binding.logOutput.append("⚠️ Không tìm thấy ứng dụng để mở file.\n")
+                }
+            } ?: run {
+                binding.logOutput.append("⚠️ Không tìm thấy file để xem.\n")
             }
         }
 
@@ -71,11 +98,12 @@ class ExportFragment : Fragment() {
             binding.logOutput.text = ""
             binding.progressBar.progress = 0
             binding.btnShare.isEnabled = false
+            binding.btnPreview.isEnabled = false
         }
     }
 
     private fun startExportProcess(maNV: String) {
-        binding.spinner.visibility = View.VISIBLE
+//        binding.spinner.visibility = View.VISIBLE
         binding.progressBar.visibility = View.VISIBLE
         binding.progressBar.progress = 0
         binding.logOutput.text = "🔄 Đang tạo phiếu xuất cho Mã NV: $maNV...\n"
@@ -108,20 +136,21 @@ class ExportFragment : Fragment() {
                     withContext(Dispatchers.Main) {
                         exportedFile = file
                         binding.progressBar.progress = 100
-                        binding.logOutput.append("✅ Đã lưu thành công tại:\n${file.absolutePath}\n")
-                        binding.spinner.visibility = View.GONE
+                        binding.logOutput.append("✅ Đã lưu thành công\n")
+//                        binding.spinner.visibility = View.GONE
                         binding.btnShare.isEnabled = true
+                        binding.btnPreview.isEnabled = true
                     }
                 } else {
                     withContext(Dispatchers.Main) {
                         binding.logOutput.append("❌ Lỗi API: ${response.code}\n")
-                        binding.spinner.visibility = View.GONE
+//                        binding.spinner.visibility = View.GONE
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     binding.logOutput.append("❌ Lỗi kết nối: ${e.message}\n")
-                    binding.spinner.visibility = View.GONE
+//                    binding.spinner.visibility = View.GONE
                 }
             }
         }
