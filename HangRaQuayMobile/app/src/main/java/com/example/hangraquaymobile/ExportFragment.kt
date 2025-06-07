@@ -116,7 +116,7 @@ class ExportFragment : Fragment() {
                     .writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
                     .build()
                 val request = Request.Builder()
-                    .url("https://chrome-api-imq9.onrender.com/generate_export?mnv=$maNV&template=phieu_xuat") // 🔁 Update with your API URL
+                    .url("https://chrome-api-imq9.onrender.com/generate_export?mnv=$maNV&template=phieu_xuat")
                     .build()
 
                 val response = client.newCall(request).execute()

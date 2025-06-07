@@ -20,6 +20,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -51,6 +52,14 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation ("androidx.viewpager2:viewpager2:1.0.0")
+    implementation ("com.google.android.material:material:1.11.0")
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation ("org.apache.poi:poi:5.2.5")
+    implementation ("org.apache.poi:poi-ooxml:5.2.5")
+    implementation ("org.apache.commons:commons-collections4:4.4")
+    implementation ("org.apache.xmlbeans:xmlbeans:5.1.1")
+    implementation ("androidx.multidex:multidex:2.0.1")
+
 
 }

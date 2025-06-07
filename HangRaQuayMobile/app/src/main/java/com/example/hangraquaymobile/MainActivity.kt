@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val tabTitles = listOf("Phiếu Xuất", "Tab 2") // Add more titles if you have more fragments
+    private val tabTitles = listOf("Xuất hàng ra quầy", "Hàng không phù hợp") // Add more titles
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
 
         val fragments = listOf(
             ExportFragment(),
-            AnotherFragment() // Replace or add your other fragment(s)
+            KPHFragment()
         )
 
         val adapter = object : FragmentStateAdapter(this) {
